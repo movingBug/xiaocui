@@ -4,7 +4,7 @@
  * @Author: sueRimn
  * @Date: 2021-07-18 16:57:38
  * @LastEditors: sueRimn
- * @LastEditTime: 2021-07-18 18:29:12
+ * @LastEditTime: 2021-07-18 18:37:32
 -->
 <!DOCTYPE html>
 <html lang="en">
@@ -18,6 +18,7 @@
     <div class="btn" onclick="takePictureOnclick()">
         打开相机
     </div>
+    <input class="select-img" type="file" οnchange="selectImage(this);" value="选择本地相册"/>
     <input id="takepicture" type="file" accept="image/*" capture="camera" style="display: none">
     <img class="img" src="" alt="">
     <script src="https://cdn.bootcdn.net/ajax/libs/vConsole/3.9.0/vconsole.min.js"></script>
@@ -109,6 +110,20 @@
                 // uploadPicture(imgurl);
             };
         };
+        // 选择本地相册
+        function selectImage(file) {
+            console.log(file, 'file');
+            if (!file.files || !file.files[0]) {
+                return;
+            }
+            var reader = new FileReader();
+            reader.onload = function (evt) {
+                console.log('选择本地相册', evt);
+                document.getElementsByClassName('img')[0].setAttribute('src', evt.target.result);
+                image = evt.target.result;
+            }
+            reader.readAsDataURL(file.files[0]);
+        }
     </script>
 </body>
 </html>
@@ -121,8 +136,17 @@
         line-height: 100px;
         text-align: center;
     }
-    /* .img {
+    .img {
         width: 200px;
-        height: 200px;
+        height: 800px;
+    }
+    /* .select-img {
+        opacity: 0;
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: 999;
     } */
 </style>
