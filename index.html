@@ -2,57 +2,56 @@
  * @Descripttion: 
  * @version: 
  * @Author: sueRimn
- * @Date: 2020-02-24 22:15:13
+ * @Date: 2021-07-18 16:57:38
  * @LastEditors: sueRimn
- * @LastEditTime: 2020-05-23 12:45:28
---> 
+ * @LastEditTime: 2021-07-18 17:07:04
+-->
 <!DOCTYPE html>
-<html lang="en" >
-
-<head>
-  <meta charset="UTF-8">
-  <title>Love you all</title>
-  <style>
-
-  </style>
-      <link rel="stylesheet" href="css/style.css">
-
-  
-</head>
-
-<body>
-
-  <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Love</title>
+    <title>Document</title>
 </head>
 <body>
-    <!-- <div class="lobe">
-        <span class="mine">
-            我
-        </span>
-        <span class="ai">
-            中意
-        </span>
-        <span class="your">
-            你呀 崔梦媛 ❥(^_-)
-        </span>
+    <div onclick="takePictureOnclick()">
+        打开相机
     </div>
-    <div class="back"></div>
-    <div class="love"></div>
-    <div class="love-1"></div>
-    <div class="love-2"></div> -->
-    <a href="javascript:openApp('helloWorld','https://a.app.qq.com/o/simple.jsp?pkgname=com.tencent.mm&g_f=1000047')">open app</a>
+    <input id="takepicture" type="file" accept="image/*" capture="camera" style="display: none">
+    <script>
+        var takePictureOnclick = function(){
+            console.log('触发相机');
+            var takePicture = document.getElementById('takepicture');
+            // 添加需要处理的代码
+            takePicture.click();
+        }
+        1 // 监听照片拍摄,并获取照片流
+        var takePicture = document.getElementById('takepicture');
+        var takePictureUrl = function () {
+        takePicture.onchange = function (event) {
+            var files = event.target.files, file;
+            if (files && files.length > 0) {
+                file = files[0];
+            try {
+                var URL = window.URL || window.webkitURL;
+                var blob = URL.createObjectURL(file);　　// 获取照片的文件流
+                compressPicture(blob);　　// 压缩照片
+            }
+            catch (e) {
+                try {
+                    var fileReader = new FileReader();
+                    fileReader.onload = function (event) {　　　　// 获取照片的base64编码
+                    compressPicture(event.target.result);　　// 压缩照片
+                };
+                  fileReader.readAsDataURL(file);
+                }
+                catch (e) {
+                  alert(common.MESSAGE.title.error, '拍照失败,请联系客服或尝试更换手机再试!');
+                }
+            }
+            }}
+        }();
+    </script>
 </body>
-</html>
-  
-    <script  src="js/index.js"></script>
-
-
-
-</body>
-
 </html>
