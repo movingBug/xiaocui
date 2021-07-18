@@ -4,7 +4,7 @@
  * @Author: sueRimn
  * @Date: 2021-07-18 16:57:38
  * @LastEditors: sueRimn
- * @LastEditTime: 2021-07-18 18:37:32
+ * @LastEditTime: 2021-07-18 19:00:45
 -->
 <!DOCTYPE html>
 <html lang="en">
@@ -15,19 +15,40 @@
     <title>Document</title>
 </head>
 <body>
-    <div class="btn" onclick="takePictureOnclick()">
+    <input id="fileBtn" type="file" onchange="upload('#fileBtn', '#img');" accept="image/*" capture="camera"/>
+    <img src="" id="img"/>
+    <!-- <div class="btn" onclick="takePictureOnclick()">
         打开相机
     </div>
-    <input class="select-img" type="file" οnchange="selectImage(this);" value="选择本地相册"/>
+    <span class="left-title">引用URL：</span>
+    <input type="text" class="url-text" placeholder="请输入URL地址" >
+    <span class="url-remarks">备注：必须以http://或者https://开头</span> -->
+    <!-- <div class="btn" onclick="selectImage(this)">
+        选择本地相册
+    </div> -->
+    <!-- <input class="select-img" type="file" οnchange="selectImage(this);" style="display: none"/> -->
     <input id="takepicture" type="file" accept="image/*" capture="camera" style="display: none">
     <img class="img" src="" alt="">
     <script src="https://cdn.bootcdn.net/ajax/libs/vConsole/3.9.0/vconsole.min.js"></script>
+    <script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.6.0/jquery.js"></script>
     <script src="./js/img-zip.js"></script>
     <script>
         const url = 'https://tpc.googlesyndication.com/simgad/18155665840688858512?sqp=4sqPyQQ7QjkqNxABHQAAtEIgASgBMAk4A0DwkwlYAWBfcAKAAQGIAQGdAQAAgD-oAQGwAYCt4gS4AV_FAS2ynT4&rs=AOga4qlZp1t7pObgbQ99_Tn-7bgWea8VGg';
         setTimeout(() => {
             document.getElementsByClassName('img')[0].setAttribute('src', url);
         }, 2000);
+        var upload = function(c, d){
+            console.log(c, d, '选择拍照或者本地相册');
+            var $c = document.querySelector(c),
+                $d = document.querySelector(d),
+                file = $c.files[0],
+                reader = new FileReader();
+            reader.readAsDataURL(file);
+            reader.onload = function(e){
+                console.log(e, 'e.target.result');
+                $d.setAttribute("src", e.target.result);
+            };
+        };
         console.log(new MegaPixImage(url), 'new MegaPixImage');
         var vConsole = new VConsole();
         console.log('Vconsole hello world');
@@ -110,15 +131,40 @@
                 // uploadPicture(imgurl);
             };
         };
+        // 选择图片
+        function checkImg(){
+            $("#checkImg").on('click',function () {
+                $("#upload").click(); //隐藏了input:file样式后，点击头像就可以本地上传
+                $("#upload").on("change",function(){
+                    var objUrl = getObjectURL(this.files[0]) ; //获取图片的路径，该路径不是图片在本地的路径
+                    if (objUrl) {
+                        $('#pic').show()
+                        $("#pic").attr("src", objUrl) ; //将图片路径存入src中，显示出图片
+                    }
+                });
+            });
+        }
+        //建立一個可存取到該file的url
+        function getObjectURL(file) {
+            var url = null ;
+            if (window.createObjectURL!=undefined) { // basic
+                url = window.createObjectURL(file) ;
+            } else if (window.URL!=undefined) { // mozilla(firefox)
+                url = window.URL.createObjectURL(file) ;
+            } else if (window.webkitURL!=undefined) { // webkit or chrome
+                url = window.webkitURL.createObjectURL(file) ;
+            }
+            return url ;
+        }
         // 选择本地相册
         function selectImage(file) {
-            console.log(file, 'file');
+            console.log(file, '选择本地相册');
             if (!file.files || !file.files[0]) {
                 return;
             }
             var reader = new FileReader();
             reader.onload = function (evt) {
-                console.log('选择本地相册', evt);
+                console.log('进入事件', evt);
                 document.getElementsByClassName('img')[0].setAttribute('src', evt.target.result);
                 image = evt.target.result;
             }
@@ -135,10 +181,11 @@
         color: #ffffff;
         line-height: 100px;
         text-align: center;
+        margin-top: 20px;
     }
     .img {
-        width: 200px;
-        height: 800px;
+        width: 80px;
+        height: 80px;
     }
     /* .select-img {
         opacity: 0;
