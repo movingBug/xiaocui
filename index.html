@@ -4,7 +4,7 @@
  * @Author: sueRimn
  * @Date: 2021-07-18 16:57:38
  * @LastEditors: sueRimn
- * @LastEditTime: 2021-07-18 18:24:50
+ * @LastEditTime: 2021-07-18 18:29:12
 -->
 <!DOCTYPE html>
 <html lang="en">
@@ -27,7 +27,7 @@
         setTimeout(() => {
             document.getElementsByClassName('img')[0].setAttribute('src', url);
         }, 2000);
-        // console.log(new MegaPixImage(url), 'new MegaPixImage');
+        console.log(new MegaPixImage(url), 'new MegaPixImage');
         var vConsole = new VConsole();
         console.log('Vconsole hello world');
         var takePictureOnclick = function(){
@@ -86,7 +86,9 @@
                 var imgurl = canvas.toDataURL('image/jpeg', quality);
                 // 修复IOS兼容问题
                 if (navigator.userAgent.match(/iphone/i)) {
-                var mpImg = new MegaPixImage(image);
+                console.log(MegaPixImage, 'MegaPixImage');
+                var mpImg = new MegaPixImage(imgurl);
+                console.log(mpImg, 'mpImg');
                 mpImg.render(canvas, {
                     maxWidth: width,
                     maxHeight: height,
