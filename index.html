@@ -4,7 +4,7 @@
  * @Author: sueRimn
  * @Date: 2021-07-18 16:57:38
  * @LastEditors: sueRimn
- * @LastEditTime: 2021-07-18 17:07:04
+ * @LastEditTime: 2021-07-18 18:13:56
 -->
 <!DOCTYPE html>
 <html lang="en">
@@ -15,11 +15,19 @@
     <title>Document</title>
 </head>
 <body>
-    <div onclick="takePictureOnclick()">
+    <div class="btn" onclick="takePictureOnclick()">
         打开相机
     </div>
     <input id="takepicture" type="file" accept="image/*" capture="camera" style="display: none">
+    <img class="img" src="" alt="">
+    <script src="https://cdn.bootcdn.net/ajax/libs/vConsole/3.9.0/vconsole.min.js"></script>
     <script>
+        const url = 'https://tpc.googlesyndication.com/simgad/18155665840688858512?sqp=4sqPyQQ7QjkqNxABHQAAtEIgASgBMAk4A0DwkwlYAWBfcAKAAQGIAQGdAQAAgD-oAQGwAYCt4gS4AV_FAS2ynT4&rs=AOga4qlZp1t7pObgbQ99_Tn-7bgWea8VGg';
+        setTimeout(() => {
+            document.getElementsByClassName('img')[0].setAttribute('src', url);
+        }, 2000);
+        var vConsole = new VConsole();
+        console.log('Vconsole hello world');
         var takePictureOnclick = function(){
             console.log('触发相机');
             var takePicture = document.getElementById('takepicture');
@@ -30,12 +38,15 @@
         var takePicture = document.getElementById('takepicture');
         var takePictureUrl = function () {
         takePicture.onchange = function (event) {
+            console.log(event, 'event');
             var files = event.target.files, file;
+            console.log(files, 'file文件流');
             if (files && files.length > 0) {
                 file = files[0];
             try {
                 var URL = window.URL || window.webkitURL;
                 var blob = URL.createObjectURL(file);　　// 获取照片的文件流
+                console.log(blob, '生成blob文件流，调用压缩方法');
                 compressPicture(blob);　　// 压缩照片
             }
             catch (e) {
@@ -52,6 +63,62 @@
             }
             }}
         }();
+        var compressPicture = function (blob) {
+            var quality = 0.5,
+            image = new Image();
+            image.src = blob;
+            image.onload = function () {
+                var that = this;
+                // 生成比例
+                console.log(that, 'that');
+                var width = 600, height = 200;
+                width = width / 4;
+                height = height / 4;
+                // 生成canvas画板
+                var canvas = document.createElement('canvas');
+                var ctx = canvas.getContext('2d');
+                canvas.width = width;
+                canvas.height = height;
+                ctx.drawImage(that, 0, 0, width, height);
+                // 生成base64,兼容修复移动设备需要引入mobileBUGFix.js
+                var imgurl = canvas.toDataURL('image/jpeg', quality);
+                // 修复IOS兼容问题
+                if (navigator.userAgent.match(/iphone/i)) {
+                var mpImg = new MegaPixImage(image);
+                mpImg.render(canvas, {
+                    maxWidth: width,
+                    maxHeight: height,
+                    quality: quality
+                });
+                imgurl = canvas.toDataURL('image/jpeg', quality);
+                console.log(imgurl, 'imgurl');
+                if (imgurl) {
+                    document.getElementsByClassName('img')[0].setAttribute('src', imgurl);
+                    // const img = new Image();
+                    // img.URL = imgurl;
+                    // document.getElementsByClassName('img-box')[0].appendChild(img);
+                    // console.log(img, 'imgggg');
+                    // document.body.appendChild(img);
+                }
+                }
+                // 上传照片
+                // uploadPicture(imgurl);
+            };
+        };
     </script>
 </body>
 </html>
+<style>
+    .btn {
+        width: 100px;
+        height: 100px;
+        background-color: skyblue;
+        color: #ffffff;
+        line-height: 100px;
+        text-align: center;
+    }
+    /* .img {
+        width: 200px;
+        height: 200px;
+    } */
+</style>
